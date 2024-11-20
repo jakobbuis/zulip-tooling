@@ -14,7 +14,7 @@ require_once __DIR__ . '/vendor/autoload.php';
 
 Dotenv::createImmutable(__DIR__)->load();
 
-$transport = Transport::fromDsn($_ENV['MAILER_DSN']);
+$transport = Transport::fromDsn($_ENV['MAIL_DSN']);
 $mailer = new Mailer($transport);
 
 $email = (new Email())
