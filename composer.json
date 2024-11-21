@@ -2,7 +2,7 @@
     "name": "jakobbuis/zulip-messenger",
     "description": "Sends messages to Zulip on a schedule",
     "type": "project",
-    "license": "LGPL-3.0-or-later",
+    "license": "MIT",
     "minimum-stability": "stable",
     "require": {
         "vlucas/phpdotenv": "^5.6",
