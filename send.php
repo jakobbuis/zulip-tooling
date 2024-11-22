@@ -12,7 +12,15 @@ use Symfony\Component\Mime\Email;
 
 require_once __DIR__ . '/vendor/autoload.php';
 
-Dotenv::createImmutable(__DIR__)->load();
+$dotenv = Dotenv::create($repository, __DIR__);
+$dotenv->load();
+$dotenv->required([
+    'MAIL_DSN',
+    'MAIL_FROM_NAME',
+    'MAIL_FROM_ADDRESS',
+    'ZULIP_CHANNEL_MAIL',
+    'ZULIP_TOPIC',
+]);
 
 $transport = Transport::fromDsn($_ENV['MAIL_DSN']);
 $mailer = new Mailer($transport);
