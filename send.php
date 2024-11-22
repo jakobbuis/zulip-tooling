@@ -12,7 +12,7 @@ use Symfony\Component\Mime\Email;
 
 require_once __DIR__ . '/vendor/autoload.php';
 
-$dotenv = Dotenv::create($repository, __DIR__);
+$dotenv = Dotenv::createMutable(__DIR__);
 $dotenv->load();
 $dotenv->required([
     'MAIL_DSN',
