@@ -1,25 +1,15 @@
 <?php
 
-/*
- * This file sends an email to a particular zulip topic.
- */
-
-use Dotenv\Dotenv;
 use Symfony\Component\Mailer\Transport;
 use Symfony\Component\Mailer\Mailer;
 use Symfony\Component\Mime\Address;
 use Symfony\Component\Mime\Email;
 
-require_once __DIR__ . '/vendor/autoload.php';
+/*
+ * This file sends an email to a particular zulip topic.
+ */
 
-$dotenv = Dotenv::createMutable(__DIR__);
-$dotenv->load();
-$dotenv->required([
-    'MAIL_DSN',
-    'MAIL_FROM_NAME',
-    'MAIL_FROM_ADDRESS',
-    'ZULIP_CHANNEL_MAIL',
-]);
+require_once __DIR__ . '/bootstrap.php';
 
 $transport = Transport::fromDsn($_ENV['MAIL_DSN']);
 $mailer = new Mailer($transport);
