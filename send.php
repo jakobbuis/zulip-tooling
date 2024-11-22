@@ -19,7 +19,6 @@ $dotenv->required([
     'MAIL_FROM_NAME',
     'MAIL_FROM_ADDRESS',
     'ZULIP_CHANNEL_MAIL',
-    'ZULIP_TOPIC',
 ]);
 
 $transport = Transport::fromDsn($_ENV['MAIL_DSN']);
@@ -40,7 +39,7 @@ EOD;
 $email = (new Email())
     ->from(new Address($_ENV['MAIL_FROM_ADDRESS'], $_ENV['MAIL_FROM_NAME']))
     ->to($_ENV['ZULIP_CHANNEL_MAIL'])
-    ->subject($_ENV['ZULIP_TOPIC'])
+    ->subject(date('d-m-Y'))
     ->text($text);
 
 $mailer->send($email);
