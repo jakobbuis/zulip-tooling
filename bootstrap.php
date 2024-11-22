@@ -11,4 +11,5 @@ $dotenv->required([
     'MAIL_FROM_NAME',
     'MAIL_FROM_ADDRESS',
     'ZULIP_CHANNEL_MAIL',
+    'ZULIP_API_KEY',
 ]);
