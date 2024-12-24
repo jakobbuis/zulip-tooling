@@ -10,3 +10,4 @@
 1. Copy `.env.example` to `.env` and fill in the details.
 1. Run `php send.php` when wanting to send the message. Note emails can take up to a minute to arrive on Zulip.
 1. Run `php close.php` to close today's topic.
+1. Optionally create a file `holidays.csv` in the root folder to hardcode dates to be skipped.
