@@ -12,7 +12,10 @@ $dotenv->required([
     'MAIL_FROM_NAME',
     'MAIL_FROM_ADDRESS',
     'ZULIP_CHANNEL_MAIL',
+    'ZULIP_USERNAME',
     'ZULIP_API_KEY',
+    'ZULIP_URL',
+    'ZULIP_STREAM',
 ]);
 
 // Skip operation on national holidays
