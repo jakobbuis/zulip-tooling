@@ -37,4 +37,12 @@ $completedTopics = count(array_filter($topics, function ($topic) {
 
 $incompleteTopics = count($topics) - $completedTopics;
 
-var_dump($completedTopics, $incompleteTopics);
+echo "Completed Topics: $completedTopics" . PHP_EOL;
+echo "Incomplete Topics: $incompleteTopics" . PHP_EOL;
+echo PHP_EOL;
+$link = $_ENV['GOOGLE_SHEET_LINK'] ?? null;
+if ($link) {
+    echo "\033]8;;{$link}\033\\Add to sheet here\033]8;;\033\\\n" . PHP_EOL;
+} else {
+    echo "(You can set GOOGLE_SHEET_LINK in .env to have a convenience link here)" . PHP_EOL;
+}
