@@ -6,6 +6,12 @@ use GuzzleHttp\Client;
  * This file closes the topic for today
  */
 
+$stream = (string) $argv[1] ?? null;
+if ($stream === null) {
+    echo "Usage: php send.php <stream>\n";
+    exit(1);
+}
+
 require_once __DIR__ . '/bootstrap.php';
 
 $guzzle = new Client([
@@ -25,7 +31,7 @@ $response = $guzzle->get('/api/v1/messages', [
         'num_before' => 1,
         'num_after' => 1,
         'narrow' => json_encode([
-            ['operator' => 'stream', 'operand' => $_ENV['ZULIP_STREAM']],
+            ['operator' => 'stream', 'operand' => $stream],
             ['operator' => 'topic', 'operand' => $todaysTopic],
         ]),
     ],
