@@ -1,5 +1,5 @@
-# Zulip messenger
-> Sends messages to Zulip on a schedule
+# Zulip tooling
+> Various tooling for use with Zulip instances
 
 ## Requirements
 - Zulip installation with incoming email gateway

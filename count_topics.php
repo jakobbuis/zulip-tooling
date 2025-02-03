@@ -12,7 +12,7 @@ $guzzle = new Client([
     'base_uri' => $_ENV['ZULIP_URL'],
     'auth' => [$_ENV['ZULIP_USERNAME'], $_ENV['ZULIP_API_KEY']],
     'headers' => [
-        'User-Agent' => 'Zulip-Messenger',
+        'User-Agent' => 'Zulip-Tooling',
     ],
 ]);
 

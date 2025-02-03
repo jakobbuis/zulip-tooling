@@ -1,6 +1,6 @@
 {
-    "name": "jakobbuis/zulip-messenger",
-    "description": "Sends messages to Zulip on a schedule",
+    "name": "jakobbuis/zulip-tooling",
+    "description": "Various tooling for use with Zulip instances",
     "type": "project",
     "license": "MIT",
     "minimum-stability": "stable",
