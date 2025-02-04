@@ -5,7 +5,6 @@ use GuzzleHttp\Client;
 /*
  * Count open topics per stream and in total
  */
-
 require_once __DIR__ . '/bootstrap.php';
 
 $guzzle = new Client([
@@ -23,23 +22,37 @@ $blockedListedChannels = array_map('trim', $blockedListedChannels);
 $channels = array_filter($channels, function ($channel) use ($blockedListedChannels) {
     return !in_array($channel->name, $blockedListedChannels);
 });
-$channels = array_map(fn ($channel) => $channel->stream_id, $channels);
+usort($channels, fn ($a, $b) => strcasecmp($a->name, $b->name));
 
-$topics = array_map(function($channelId) use ($guzzle) {
-    $response = $guzzle->get('/api/v1/users/me/' . $channelId . '/topics');
-    return array_map(function ($topic) {
-        return $topic->name;
-    }, json_decode($response->getBody()->getContents())->topics);
+$statistics = array_map(function($channel) use ($guzzle) {
+    $response = $guzzle->get('/api/v1/users/me/' . $channel->stream_id . '/topics');
+    $topics = json_decode($response->getBody()->getContents())->topics;
+
+    $closedTopics = count(array_filter($topics, fn ($topic) => str_starts_with($topic->name, '✔')));
+    $openTopics = count($topics) - $closedTopics;
+
+    return [
+        'channel' => $channel->name,
+        'closed' => $closedTopics,
+        'open' => $openTopics,
+    ];
 }, $channels);
 
-$topics = array_merge(...$topics);
+$closedTopics = array_sum(array_column($statistics, 'closed'));
+$openTopics = array_sum(array_column($statistics, 'open'));
 
-$completedTopics = count(array_filter($topics, fn ($topic) => str_starts_with($topic, '✔')));
-$incompleteTopics = count($topics) - $completedTopics;
-
-echo "Completed Topics: $completedTopics" . PHP_EOL;
-echo "Incomplete Topics: $incompleteTopics" . PHP_EOL;
+$mask = "|%-30.30s |%6.6s |%4.4s |\n";
+printf($mask, 'Stream', 'Closed', 'Open');
+echo "|-------------------------------|-------|-----|" . PHP_EOL;
+foreach ($statistics as $statistic) {
+    printf($mask, $statistic['channel'], $statistic['closed'], $statistic['open']);
+}
 echo PHP_EOL;
+
+echo "Closed Topics: $closedTopics" . PHP_EOL;
+echo "Open Topics: $openTopics" . PHP_EOL;
+echo PHP_EOL;
+
 $link = $_ENV['GOOGLE_SHEET_LINK'] ?? null;
 if ($link) {
     echo "\033]8;;{$link}\033\\Add to sheet here\033]8;;\033\\\n" . PHP_EOL;
