@@ -34,10 +34,7 @@ $topics = array_map(function($channelId) use ($guzzle) {
 
 $topics = array_merge(...$topics);
 
-$completedTopics = count(array_filter($topics, function ($topic) {
-    return str_starts_with($topic, '✔');
-}));
-
+$completedTopics = count(array_filter($topics, fn ($topic) => str_starts_with($topic, '✔')));
 $incompleteTopics = count($topics) - $completedTopics;
 
 echo "Completed Topics: $completedTopics" . PHP_EOL;
