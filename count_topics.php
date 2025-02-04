@@ -17,10 +17,13 @@ $guzzle = new Client([
 ]);
 
 $response = $guzzle->get('/api/v1/streams');
-$channels = array_map(function ($channel) {
-    return $channel->stream_id;
-}, json_decode($response->getBody()->getContents())->streams);
-
+$channels = json_decode($response->getBody()->getContents())->streams;
+$blockedListedChannels = explode(',', $_ENV['IGNORED_CHANNELS'] ?? "");
+$blockedListedChannels = array_map('trim', $blockedListedChannels);
+$channels = array_filter($channels, function ($channel) use ($blockedListedChannels) {
+    return !in_array($channel->name, $blockedListedChannels);
+});
+$channels = array_map(fn ($channel) => $channel->stream_id, $channels);
 
 $topics = array_map(function($channelId) use ($guzzle) {
     $response = $guzzle->get('/api/v1/users/me/' . $channelId . '/topics');
