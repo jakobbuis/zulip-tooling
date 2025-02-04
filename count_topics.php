@@ -3,7 +3,7 @@
 use GuzzleHttp\Client;
 
 /*
- * This file closes the topic for today
+ * Count open topics per stream and in total
  */
 
 require_once __DIR__ . '/bootstrap.php';
