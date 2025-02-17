@@ -34,7 +34,7 @@ $text = <<<EOD
 1. Are there any blockers in your way?
 1. Clearly describe any out-of-office planned for the next 24 hours.
 
-Please post your answers to the questions below in this thread. We'll start the daily standup with 3 minutes of silent reading.
+Please post your answers to the questions below in this thread.
 EOD;
 
 $email = (new Email())
