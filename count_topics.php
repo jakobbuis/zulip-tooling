@@ -27,6 +27,7 @@ usort($channels, fn ($a, $b) => strcasecmp($a->name, $b->name));
 $statistics = array_map(function($channel) use ($guzzle) {
     $response = $guzzle->get('/api/v1/users/me/' . $channel->stream_id . '/topics');
     $topics = json_decode($response->getBody()->getContents())->topics;
+    $topics = array_filter($topics, fn ($topic) => $topic->name !== 'stream events');
 
     $closedTopics = count(array_filter($topics, fn ($topic) => str_starts_with($topic->name, '✔')));
     $openTopics = count($topics) - $closedTopics;
