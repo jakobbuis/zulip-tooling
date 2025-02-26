@@ -1,6 +1,7 @@
 <?php
 
 use Dotenv\Dotenv;
+use GuzzleHttp\Client;
 use League\Csv\Reader;
 
 require_once __DIR__ . '/vendor/autoload.php';
@@ -28,3 +29,11 @@ if (is_readable($path)) {
         exit;
     }
 }
+
+$guzzle = new Client([
+    'base_uri' => $_ENV['ZULIP_URL'],
+    'auth' => [$_ENV['ZULIP_USERNAME'], $_ENV['ZULIP_API_KEY']],
+    'headers' => [
+        'User-Agent' => 'Zulip-Tooling',
+    ],
+]);
