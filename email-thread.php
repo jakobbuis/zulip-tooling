@@ -53,8 +53,9 @@ $messages = array_filter($messages, function ($message) use ($since) {
 
 // Fetch images
 $images = array_reduce($messages, function ($carry, $message) {
-    if (isset($message->content) && preg_match_all('/src="(.*)"/', $message->content, $matches)) {
-        return array_merge($carry, $matches[1]);
+    if (isset($message->content) && preg_match_all('/src="(.*)"/U', $message->content, $matches)) {
+        array_shift($matches);
+        return array_merge($carry, ...$matches);
     }
     return $carry;
 }, []);
