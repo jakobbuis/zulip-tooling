@@ -59,7 +59,7 @@ $images = array_reduce($messages, function ($carry, $message) {
     return $carry;
 }, []);
 
-$images = array_map(fn ($path) => getenv('ZULIP_URL') . $path, $images);
+$images = array_map(fn ($path) => $_ENV['ZULIP_URL'] . $path, $images);
 $images = array_map(function ($image) use ($guzzle) {
     $file = tempnam(sys_get_temp_dir(), 'zulip_tooling_email_thread');
     $response = $guzzle->get($image);
