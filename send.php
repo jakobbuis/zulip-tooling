@@ -37,10 +37,54 @@ $text = <<<EOD
 Please post your answers to the questions below in this thread.
 EOD;
 
+// Add open topics to the message if today is Wednesday
+if (date('w') == 3) { // 3 = Wednesday
+    $response = $guzzle->get('/api/v1/streams');
+    $channels = json_decode($response->getBody()->getContents())->streams;
+    $blockedListedChannels = explode(',', $_ENV['IGNORED_CHANNELS'] ?? "");
+    $blockedListedChannels = array_map('trim', $blockedListedChannels);
+    $channels = array_filter($channels, function ($channel) use ($blockedListedChannels) {
+        return !in_array($channel->name, $blockedListedChannels);
+    });
+
+    $openTopicsByChannel = [];
+    foreach ($channels as $channel) {
+        $response = $guzzle->get('/api/v1/users/me/' . $channel->stream_id . '/topics');
+        $topics = json_decode($response->getBody()->getContents())->topics;
+        $topics = array_filter($topics, fn ($topic) => $topic->name !== 'stream events' && !str_starts_with($topic->name, '✔'));
+
+        if (!empty($topics)) {
+            $openTopicsByChannel[$channel->name] = array_map(function ($topic) use ($channel) {
+                return sprintf(
+                    '<a href="%s/#narrow/stream/%s/topic/%s">%s</a>',
+                    $_ENV['ZULIP_URL'],
+                    $channel->stream_id,
+                    rawurlencode($topic->name),
+                    htmlspecialchars($topic->name)
+                );
+            }, $topics);
+        }
+    }
+
+    if (!empty($openTopicsByChannel)) {
+        $openTopicsHtml = "<ul>";
+        foreach ($openTopicsByChannel as $channelName => $topics) {
+            $openTopicsHtml .= sprintf(
+                '<li><strong>%s</strong><ul><li>%s</li></ul></li>',
+                htmlspecialchars($channelName),
+                implode('</li><li>', $topics)
+            );
+        }
+        $openTopicsHtml .= "</ul>";
+        $text .= "\n\n---\n\nHere are the open topics to review today, grouped by channel. Review this list in the daily and resolve any lingering items\n\n" . $openTopicsHtml;
+    }
+}
+
 $email = (new Email())
     ->from(new Address($_ENV['MAIL_FROM_ADDRESS'], $_ENV['MAIL_FROM_NAME']))
     ->to($email)
     ->subject(date('d-m-Y'))
-    ->text($text);
+    ->text($text)
+    ->html(nl2br($text)); // Convert newlines to <br> for HTML rendering
 
 $mailer->send($email);
