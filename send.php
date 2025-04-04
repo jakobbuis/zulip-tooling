@@ -84,7 +84,6 @@ $email = (new Email())
     ->from(new Address($_ENV['MAIL_FROM_ADDRESS'], $_ENV['MAIL_FROM_NAME']))
     ->to($email)
     ->subject(date('d-m-Y'))
-    ->text($text)
     ->html(nl2br($text)); // Convert newlines to <br> for HTML rendering
 
 $mailer->send($email);
