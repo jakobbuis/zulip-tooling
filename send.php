@@ -27,14 +27,14 @@ $mailer = new Mailer($transport);
 
 $date = date('F j, Y');
 $text = <<<EOD
-:wave: Good morning! Today is $date. It's time for daily standup:
-
-1. What did you accomplish yesterday?
-1. What are you going to finish today?
-1. Are there any blockers in your way?
-1. Clearly describe any out-of-office planned for the next 24 hours.
-
-Please post your answers to the questions below in this thread.
+<p>:wave: Good morning! Today is $date. It's time for daily standup:</p>
+<ul>
+<li>What did you accomplish yesterday?</li>
+<li>What are you going to finish today?</li>
+<li>Are there any blockers in your way?</li>
+<li>Clearly describe any out-of-office planned for the next 24 hours.</li>
+</ul>
+<p>Please post your answers to the questions below in this thread.</p>
 EOD;
 
 // Add open topics to the message if today is Wednesday
@@ -76,7 +76,7 @@ if (date('w') == 3) { // 3 = Wednesday
             );
         }
         $openTopicsHtml .= "</ul>";
-        $text .= "\n\n---\n\nHere are the open topics to review today, grouped by channel. Review this list in the daily and resolve any lingering items\n\n" . $openTopicsHtml;
+        $text .= "<p>Here are the open topics to review today, grouped by channel. Review this list in the daily and resolve any lingering items</p>" . $openTopicsHtml;
     }
 }
 
@@ -84,6 +84,6 @@ $email = (new Email())
     ->from(new Address($_ENV['MAIL_FROM_ADDRESS'], $_ENV['MAIL_FROM_NAME']))
     ->to($email)
     ->subject(date('d-m-Y'))
-    ->html(nl2br($text)); // Convert newlines to <br> for HTML rendering
+    ->html($text);
 
 $mailer->send($email);
