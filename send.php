@@ -27,12 +27,12 @@ $mailer = new Mailer($transport);
 
 $date = date('F j, Y');
 $text = <<<EOD
-:wave: Good morning! Today is $date. It's time for daily standup:
+:wave: Good morning! Today is $date. It's time for daily standup:\n
 1. What did you accomplish yesterday?
 1. What are you going to finish today?
 1. Are there any blockers in your way?
-1. Clearly describe any out-of-office planned for the next 24 hours.
-Please post your answers to the questions below in this thread.
+1. Clearly describe any out-of-office planned for the next 24 hours.\n
+Please post your answers to the questions below in this thread.\n
 EOD;
 
 // Add open topics to the message if today is Wednesday
@@ -58,7 +58,7 @@ if (date('w') == 3) { // 3 = Wednesday
 
     if (!empty($openTopicsByChannel)) {
 
-        $text .= "Here are the open topics to review today, grouped by channel. Review this list in the daily and resolve any lingering items.\n";
+        $text .= "Here are the open topics to review today, grouped by channel. Review this list in the daily and resolve any lingering items.\n\n";
 
         foreach ($openTopicsByChannel as $channel => $topics) {
             foreach ($topics as $topic) {
