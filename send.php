@@ -27,14 +27,12 @@ $mailer = new Mailer($transport);
 
 $date = date('F j, Y');
 $text = <<<EOD
-<p>:wave: Good morning! Today is $date. It's time for daily standup:</p>
-<ul>
-<li>What did you accomplish yesterday?</li>
-<li>What are you going to finish today?</li>
-<li>Are there any blockers in your way?</li>
-<li>Clearly describe any out-of-office planned for the next 24 hours.</li>
-</ul>
-<p>Please post your answers to the questions below in this thread.</p>
+:wave: Good morning! Today is $date. It's time for daily standup:
+1. What did you accomplish yesterday?
+1. What are you going to finish today?
+1. Are there any blockers in your way?
+1. Clearly describe any out-of-office planned for the next 24 hours.
+Please post your answers to the questions below in this thread.
 EOD;
 
 // Add open topics to the message if today is Wednesday
@@ -54,29 +52,20 @@ if (date('w') == 3) { // 3 = Wednesday
         $topics = array_filter($topics, fn ($topic) => $topic->name !== 'stream events' && !str_starts_with($topic->name, '✔'));
 
         if (!empty($topics)) {
-            $openTopicsByChannel[$channel->name] = array_map(function ($topic) use ($channel) {
-                return sprintf(
-                    '<a href="%s/#narrow/stream/%s/topic/%s">%s</a>',
-                    $_ENV['ZULIP_URL'],
-                    $channel->stream_id,
-                    rawurlencode($topic->name),
-                    htmlspecialchars($topic->name)
-                );
-            }, $topics);
+            $openTopicsByChannel[$channel->name] = array_map(fn ($topic) => $topic->name, $topics);
         }
     }
 
     if (!empty($openTopicsByChannel)) {
-        $openTopicsHtml = "<ul>";
+
+        $text .= "Here are the open topics to review today, grouped by channel. Review this list in the daily and resolve any lingering items.\n";
+
         foreach ($openTopicsByChannel as $channelName => $topics) {
-            $openTopicsHtml .= sprintf(
-                '<li><strong>%s</strong><ul><li>%s</li></ul></li>',
-                htmlspecialchars($channelName),
-                implode('</li><li>', $topics)
-            );
+            $text .= "* $channelName\n";
+            foreach ($topics as $topic) {
+                $text .= "#**{$channel}>{$topic}** \n";
+            }
         }
-        $openTopicsHtml .= "</ul>";
-        $text .= "<p>Here are the open topics to review today, grouped by channel. Review this list in the daily and resolve any lingering items</p>" . $openTopicsHtml;
     }
 }
 
@@ -84,6 +73,6 @@ $email = (new Email())
     ->from(new Address($_ENV['MAIL_FROM_ADDRESS'], $_ENV['MAIL_FROM_NAME']))
     ->to($email)
     ->subject(date('d-m-Y'))
-    ->html($text);
+    ->text($text);
 
 $mailer->send($email);
