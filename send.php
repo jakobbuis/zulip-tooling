@@ -60,10 +60,9 @@ if (date('w') == 3) { // 3 = Wednesday
 
         $text .= "Here are the open topics to review today, grouped by channel. Review this list in the daily and resolve any lingering items.\n";
 
-        foreach ($openTopicsByChannel as $channelName => $topics) {
-            $text .= "* $channelName\n";
+        foreach ($openTopicsByChannel as $channel => $topics) {
             foreach ($topics as $topic) {
-                $text .= "#**{$channel}>{$topic}** \n";
+                $text .= "* #**{$channel}>{$topic}** \n";
             }
         }
     }
