@@ -21,6 +21,7 @@ if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
 }
 
 require_once __DIR__ . '/bootstrap.php';
+require_once __DIR__ . '/skip_holidays.php';
 
 $transport = Transport::fromDsn($_ENV['MAIL_DSN']);
 $mailer = new Mailer($transport);

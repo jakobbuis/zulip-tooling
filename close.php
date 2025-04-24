@@ -13,6 +13,7 @@ if ($stream === null) {
 }
 
 require_once __DIR__ . '/bootstrap.php';
+require_once __DIR__ . '/skip_holidays.php';
 
 // Get the latest message from today's topic
 $todaysTopic = date('d-m-Y');

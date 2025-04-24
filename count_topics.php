@@ -6,6 +6,7 @@ use GuzzleHttp\Client;
  * Count open topics per stream and in total
  */
 require_once __DIR__ . '/bootstrap.php';
+require_once __DIR__ . '/skip_holidays.php';
 
 $guzzle = new Client([
     'base_uri' => $_ENV['ZULIP_URL'],
