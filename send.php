@@ -10,8 +10,10 @@ use Symfony\Component\Mime\Email;
  */
 
 $email = (string) $argv[1] ?? null;
+$showOpenTopicsList = isset($argv[2]) && $argv[2] === '--show-open-topics';
+
 if ($email === null) {
-    echo "Usage: php send.php <email>\n";
+    echo "Usage: php send.php <email> [--show-open-topics]\n";
     exit(1);
 }
 
@@ -36,8 +38,8 @@ $text = <<<EOD
 Please post your answers to the questions below in this thread.\n
 EOD;
 
-// Add open topics to the message if today is Wednesday
-if (date('w') == 3) { // 3 = Wednesday
+// Add open topics to the message if today is Wednesday or flag is provided
+if (date('w') == 3 && $showOpenTopicsList) { // 3 = Wednesday
     $response = $guzzle->get('/api/v1/streams');
     $channels = json_decode($response->getBody()->getContents())->streams;
     $blockedListedChannels = explode(',', $_ENV['IGNORED_CHANNELS'] ?? "");
