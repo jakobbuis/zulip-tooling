@@ -53,10 +53,3 @@ echo PHP_EOL;
 echo "Closed Topics: $closedTopics" . PHP_EOL;
 echo "Open Topics: $openTopics" . PHP_EOL;
 echo PHP_EOL;
-
-$link = $_ENV['GOOGLE_SHEET_LINK'] ?? null;
-if ($link) {
-    echo "\033]8;;{$link}\033\\Add to sheet here\033]8;;\033\\\n" . PHP_EOL;
-} else {
-    echo "(You can set GOOGLE_SHEET_LINK in .env to have a convenience link here)" . PHP_EOL;
-}
