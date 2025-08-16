@@ -10,10 +10,12 @@ use Symfony\Component\Mime\Email;
  */
 
 $email = (string) $argv[1] ?? null;
-$showOpenTopicsList = isset($argv[2]) && $argv[2] === '--show-open-topics';
+$template = (string) $argv[2] ?? null;
+$showOpenTopicsList = isset($argv[3]) && $argv[3] === '--show-open-topics';
 
-if ($email === null) {
-    echo "Usage: php send.php <email> [--show-open-topics]\n";
+if ($email === null || $template === null) {
+    echo "Usage: php send.php <email> <template> [--show-open-topics]\n";
+    echo "Available templates: team-mad, the-team\n";
     exit(1);
 }
 
@@ -25,18 +27,18 @@ if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
 require_once __DIR__ . '/bootstrap.php';
 require_once __DIR__ . '/skip_holidays.php';
 
+$templateFile = __DIR__ . "/templates/{$template}.md";
+if (!file_exists($templateFile)) {
+    echo "Template '{$template}' not found. Available templates: team-mad, the-team\n";
+    exit(3);
+}
+
 $transport = Transport::fromDsn($_ENV['MAIL_DSN']);
 $mailer = new Mailer($transport);
 
 $date = date('F j, Y');
-$text = <<<EOD
-:wave: Good morning! Today is $date. It's time for daily standup:\n
-1. What did you accomplish yesterday?
-1. What are you going to finish today?
-1. Are there any blockers in your way?
-1. Clearly describe any out-of-office planned for the next 24 hours.\n
-Please post your answers to the questions below in this thread.\n
-EOD;
+$text = file_get_contents($templateFile);
+$text = str_replace('$date', $date, $text);
 
 // Add open topics to the message if today is Wednesday or flag is provided
 if (date('w') == 3 && $showOpenTopicsList) { // 3 = Wednesday
