@@ -11,6 +11,6 @@ First, please answer the following questions in this Zulip thread:
 Second, we'll have the daily meeting at 13:00-13:20 with the agenda:
 
 1. Any questions on the written updates?
-1. \<all discussion topics, in order of posting\>
-1. Parking lot: \<all other things, or appropriate social bonding\>
+1. All discussion topics, in order of posting
+1. Parking lot: all other things, or appropriate social bonding
 
