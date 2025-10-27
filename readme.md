@@ -10,6 +10,7 @@
 1. Clone repository.
 1. Copy `.env.example` to `.env` and fill in the details.
 1. Optionally create a file `holidays.csv` in the root folder to hardcode dates to be skipped.
+1. Optionally: run the Dockerfile if you don't have PHP locally available
 
 ## Creating a topic
 ```bash
