@@ -31,17 +31,12 @@ try {
     }
 
     if ($targetStream === null) {
-        echo "Stream '" . STREAM_NAME . "' not found.\n";
         exit(1);
     }
-
-    echo "Found stream: {$targetStream->name} (ID: {$targetStream->stream_id})\n";
 
     // Get all topics in the stream
     $response = $guzzle->get("/api/v1/users/me/{$targetStream->stream_id}/topics");
     $topics = json_decode($response->getBody()->getContents())->topics;
-
-    echo "Found " . count($topics) . " topics in the stream.\n";
 
     $processedCount = 0;
     $skippedCount = 0;
@@ -49,12 +44,10 @@ try {
     foreach ($topics as $topic) {
         // Check if the topic is already resolved (marked with ✔)
         if (str_starts_with($topic->name, '✔')) {
-            echo "Skipping resolved topic: {$topic->name}\n";
             $skippedCount++;
             continue;
         }
 
-        echo "Processing topic: {$topic->name}\n";
 
         // Get all messages in this topic
         $response = $guzzle->get('/api/v1/messages', [
@@ -73,7 +66,6 @@ try {
         $messages = $messagesData->messages ?? [];
 
         if (empty($messages)) {
-            echo "  No messages found in topic.\n";
             continue;
         }
 
@@ -87,7 +79,6 @@ try {
         }
 
         if ($alreadyCommented) {
-            echo "  Already commented on this topic. Skipping.\n";
             $skippedCount++;
             continue;
         }
@@ -154,21 +145,14 @@ try {
         $result = json_decode($response->getBody()->getContents());
 
         if ($result->result === 'success') {
-            echo "  ✓ Posted deadline comment (deadline: {$deadlineDate->format('Y-m-d H:i:s')})\n";
             $processedCount++;
         } else {
-            echo "  ✗ Failed to post comment: {$result->msg}\n";
         }
     }
 
-    echo "\nSummary:\n";
-    echo "  Processed: $processedCount topics\n";
-    echo "  Skipped: $skippedCount topics\n";
-    echo "  Total: " . count($topics) . " topics\n";
 
     exit(0);
 
 } catch (Exception $e) {
-    echo "Error: " . $e->getMessage() . "\n";
     exit(1);
 }
