@@ -81,13 +81,12 @@ try {
 
         // Format the comment message
         $comment = sprintf(
-            "%s **%s**\n\n" .
+            "%s \n\n" .
             "This incident was started on %s.\n" .
             "The resolution deadline is **%s** (%d hours after incident start).",
             BOT_COMMENT_MARKER,
-            $deadlineDate->format('Y-m-d H:i:s T'),
-            $firstMessageDate->format('Y-m-d H:i:s T'),
-            $deadlineDate->format('Y-m-d H:i:s T'),
+            $firstMessageDate->format('d-m-Y H:i:s T'),
+            $deadlineDate->format('d-m-Y H:i:s T'),
             DEADLINE_HOURS
         );
 
