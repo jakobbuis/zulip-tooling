@@ -13,29 +13,13 @@
 
 require_once __DIR__ . '/bootstrap.php';
 
-const STREAM_NAME = 'SRE # Critical';
+const STREAM_ID = 24;
 const DEADLINE_HOURS = 16;
 const BOT_COMMENT_MARKER = '⏰ Incident SLO:';
 
 try {
-    // Get the stream ID for "SRE - Critical"
-    $response = $guzzle->get('/api/v1/streams');
-    $streams = json_decode($response->getBody()->getContents())->streams;
-
-    $targetStream = null;
-    foreach ($streams as $stream) {
-        if ($stream->name === STREAM_NAME) {
-            $targetStream = $stream;
-            break;
-        }
-    }
-
-    if ($targetStream === null) {
-        exit(1);
-    }
-
     // Get all topics in the stream
-    $response = $guzzle->get("/api/v1/users/me/{$targetStream->stream_id}/topics");
+    $response = $guzzle->get("/api/v1/users/me/" . STREAM_ID . "/topics");
     $topics = json_decode($response->getBody()->getContents())->topics;
 
     $processedCount = 0;
@@ -56,7 +40,7 @@ try {
                 'num_before' => 0,
                 'num_after' => 1000, // Get up to 1000 messages
                 'narrow' => json_encode([
-                    ['operator' => 'stream', 'operand' => $targetStream->name],
+                    ['operator' => 'stream', 'operand' => STREAM_ID],
                     ['operator' => 'topic', 'operand' => $topic->name],
                 ]),
             ],
@@ -136,7 +120,7 @@ try {
         $response = $guzzle->post('/api/v1/messages', [
             'query' => [
                 'type' => 'stream',
-                'to' => $targetStream->stream_id,
+                'to' => STREAM_ID,
                 'topic' => $topic->name,
                 'content' => $comment,
             ],
