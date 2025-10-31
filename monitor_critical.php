@@ -79,41 +79,16 @@ try {
         $firstMessageDate = new DateTime('@' . $firstMessageTime);
         $firstMessageDate->setTimezone(new DateTimeZone('Europe/Amsterdam'));
 
-        // Calculate time remaining
-        $now = time();
-        $timeRemaining = $deadlineTimestamp - $now;
-        $hoursRemaining = floor($timeRemaining / 3600);
-        $minutesRemaining = floor(($timeRemaining % 3600) / 60);
-
-        $timeRemainingText = '';
-        if ($timeRemaining > 0) {
-            if ($hoursRemaining > 0) {
-                $timeRemainingText = sprintf('%d hours and %d minutes remaining', $hoursRemaining, $minutesRemaining);
-            } else {
-                $timeRemainingText = sprintf('%d minutes remaining', $minutesRemaining);
-            }
-        } else {
-            $overdueHours = abs(floor($timeRemaining / 3600));
-            $overdueMinutes = abs(floor(($timeRemaining % 3600) / 60));
-            if ($overdueHours > 0) {
-                $timeRemainingText = sprintf('**OVERDUE** by %d hours and %d minutes', $overdueHours, $overdueMinutes);
-            } else {
-                $timeRemainingText = sprintf('**OVERDUE** by %d minutes', $overdueMinutes);
-            }
-        }
-
         // Format the comment message
         $comment = sprintf(
             "%s **%s**\n\n" .
             "This incident was started on %s.\n" .
-            "The resolution deadline is **%s** (%d hours after incident start).\n\n" .
-            "%s",
+            "The resolution deadline is **%s** (%d hours after incident start).",
             BOT_COMMENT_MARKER,
             $deadlineDate->format('Y-m-d H:i:s T'),
             $firstMessageDate->format('Y-m-d H:i:s T'),
             $deadlineDate->format('Y-m-d H:i:s T'),
-            DEADLINE_HOURS,
-            $timeRemainingText
+            DEADLINE_HOURS
         );
 
         // Post the comment to the thread
