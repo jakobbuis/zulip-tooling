@@ -32,7 +32,7 @@ foreach ($topics as $topic) {
         'query' => [
             'anchor' => 'oldest',
             'num_before' => 0,
-            'num_after' => 1000, // Get up to 1000 messages
+            'num_after' => 1000,
             'narrow' => json_encode([
                 ['operator' => 'stream', 'operand' => STREAM_ID],
                 ['operator' => 'topic', 'operand' => $topic->name],
