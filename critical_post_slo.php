@@ -1,14 +1,7 @@
 <?php
 
 /*
- * Monitor "SRE - Critical" stream for unresolved threads
- *
- * This script polls the "SRE - Critical" stream and comments on any unresolved
- * threads with a deadline reminder. The deadline is 16 hours after the first
- * message in the thread. Each thread is only commented on once.
- *
- * Usage: php critical_post_slo.php
- * Recommended: Run via cron every minute
+ * Comments on open critical incident topics with SLO deadline information.
  */
 
 require_once __DIR__ . '/bootstrap.php';
@@ -16,40 +9,15 @@ require_once __DIR__ . '/bootstrap.php';
 const STREAM_ID = 24;
 const DEADLINE_HOURS = 16;
 const BOT_COMMENT_MARKER = 'Incident SLO:';
+const TIMEZONE = new DateTimeZone('Europe/Amsterdam');
 
-// Get all topics in the stream
-$response = $guzzle->get("/api/v1/users/me/" . STREAM_ID . "/topics");
-$topics = json_decode($response->getBody()->getContents())->topics;
+require_once __DIR__ . '/critical_get_open_topics.php';
 
 foreach ($topics as $topic) {
-    // Check if the topic is already resolved (marked with ✔)
-    if (str_starts_with($topic->name, '✔')) {
-        continue;
-    }
-
-    // Get all messages in this topic
-    $response = $guzzle->get('/api/v1/messages', [
-        'query' => [
-            'anchor' => 'oldest',
-            'num_before' => 0,
-            'num_after' => 1000,
-            'narrow' => json_encode([
-                ['operator' => 'stream', 'operand' => STREAM_ID],
-                ['operator' => 'topic', 'operand' => $topic->name],
-            ]),
-        ],
-    ]);
-
-    $messagesData = json_decode($response->getBody()->getContents());
-    $messages = $messagesData->messages ?? [];
-
-    if (empty($messages)) {
-        continue;
-    }
 
     // Check if we've already commented on this thread
     $alreadyCommented = false;
-    foreach ($messages as $message) {
+    foreach ($topic->messages as $message) {
         if (str_contains($message->content, BOT_COMMENT_MARKER)) {
             $alreadyCommented = true;
             break;
@@ -61,16 +29,16 @@ foreach ($topics as $topic) {
     }
 
     // Get the first message timestamp
-    $firstMessage = $messages[0];
+    $firstMessage = $topic->messages[0];
     $firstMessageTime = $firstMessage->timestamp;
 
     // Calculate deadline (16 hours after first message)
     $deadlineTimestamp = $firstMessageTime + (DEADLINE_HOURS * 3600);
     $deadlineDate = new DateTime('@' . $deadlineTimestamp);
-    $deadlineDate->setTimezone(new DateTimeZone('Europe/Amsterdam')); // Adjust timezone as needed
+    $deadlineDate->setTimezone(TIMEZONE);
 
     $firstMessageDate = new DateTime('@' . $firstMessageTime);
-    $firstMessageDate->setTimezone(new DateTimeZone('Europe/Amsterdam'));
+    $firstMessageDate->setTimezone(TIMEZONE);
 
     // Format the comment message
     $comment = sprintf(
