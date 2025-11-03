@@ -23,23 +23,19 @@ foreach ($topics as $topic) {
             break;
         }
     }
-
     if ($alreadyCommented) {
         continue;
     }
 
-    // Get the first message timestamp
+    // Check whether it's been two hours since start of the incident
     $firstMessage = $topic->messages[0];
     $firstMessageTime = $firstMessage->timestamp;
-
     if (time() - $firstMessageTime < REMINDER_AFTER_MINUTES * 60) {
         continue;
     }
 
-    // Format the comment message
-    $comment = '🔧 This incident has been ongoing for 2 hours. ' . BOT_COMMENT_MARKER . ', rather than finding the root cause. If you don\'t intend to do so, please write that decision plus your reasoning in this topic.';
-
     // Post the comment to the thread
+    $comment = '🔧 This incident has been ongoing for 2 hours. ' . BOT_COMMENT_MARKER . ', rather than finding the root cause. If you don\'t intend to do so, please write that decision plus your reasoning in this topic.';
     $guzzle->post('/api/v1/messages', [
         'query' => [
             'type' => 'stream',
