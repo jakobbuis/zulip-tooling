@@ -7,7 +7,7 @@
  * threads with a deadline reminder. The deadline is 16 hours after the first
  * message in the thread. Each thread is only commented on once.
  *
- * Usage: php monitor_critical.php
+ * Usage: php critical_post_slo.php
  * Recommended: Run via cron every minute
  */
 
