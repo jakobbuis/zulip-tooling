@@ -21,16 +21,11 @@ const BOT_COMMENT_MARKER = '⏰ Incident SLO:';
 $response = $guzzle->get("/api/v1/users/me/" . STREAM_ID . "/topics");
 $topics = json_decode($response->getBody()->getContents())->topics;
 
-$processedCount = 0;
-$skippedCount = 0;
-
 foreach ($topics as $topic) {
     // Check if the topic is already resolved (marked with ✔)
     if (str_starts_with($topic->name, '✔')) {
-        $skippedCount++;
         continue;
     }
-
 
     // Get all messages in this topic
     $response = $guzzle->get('/api/v1/messages', [
@@ -62,7 +57,6 @@ foreach ($topics as $topic) {
     }
 
     if ($alreadyCommented) {
-        $skippedCount++;
         continue;
     }
 
@@ -90,7 +84,7 @@ foreach ($topics as $topic) {
     );
 
     // Post the comment to the thread
-    $response = $guzzle->post('/api/v1/messages', [
+    $guzzle->post('/api/v1/messages', [
         'query' => [
             'type' => 'stream',
             'to' => STREAM_ID,
@@ -98,12 +92,5 @@ foreach ($topics as $topic) {
             'content' => $comment,
         ],
     ]);
-
-    $result = json_decode($response->getBody()->getContents());
-
-    if ($result->result === 'success') {
-        $processedCount++;
-    } else {
-    }
 }
 
