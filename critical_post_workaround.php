@@ -10,6 +10,7 @@ const STREAM_ID = 24;
 const REMINDER_AFTER_MINUTES = 120;
 const BOT_COMMENT_MARKER = 'At this point, your focus should be on applying workarounds to restore service';
 const TIMEZONE = new DateTimeZone('Europe/Amsterdam');
+$firstResponders = explode(',', $_ENV['FIRST_RESPONDERS']);
 
 require_once __DIR__ . '/critical_get_open_topics.php';
 
@@ -27,9 +28,12 @@ foreach ($topics as $topic) {
         continue;
     }
 
-    // Check whether it's been two hours since start of the incident
-    $firstMessage = $topic->messages[0];
-    $firstMessageTime = $firstMessage->timestamp;
+    // Check whether it's been two hours since the first message by a first responder
+    $FRMessages = array_filter($topic->messages, fn ($msg) => in_array($msg->sender_id, $firstResponders));
+    if (empty($FRMessages)) {
+        continue;
+    }
+    $firstMessageTime = reset($FRMessages)->timestamp;
     if (time() - $firstMessageTime < REMINDER_AFTER_MINUTES * 60) {
         continue;
     }
