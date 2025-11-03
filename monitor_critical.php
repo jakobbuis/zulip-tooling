@@ -24,7 +24,6 @@ $topics = json_decode($response->getBody()->getContents())->topics;
 foreach ($topics as $topic) {
     // Check if the topic is already resolved (marked with ✔)
     if (str_starts_with($topic->name, '✔')) {
-        echo "Topic '{$topic->name}' is resolved. Skipping.\n";
         continue;
     }
 
@@ -45,7 +44,6 @@ foreach ($topics as $topic) {
     $messages = $messagesData->messages ?? [];
 
     if (empty($messages)) {
-        echo "No messages found in topic '{$topic->name}'. Skipping.\n";
         continue;
     }
 
@@ -59,7 +57,6 @@ foreach ($topics as $topic) {
     }
 
     if ($alreadyCommented) {
-        echo "Already commented on topic '{$topic->name}'. Skipping.\n";
         continue;
     }
 
@@ -87,7 +84,6 @@ foreach ($topics as $topic) {
     );
 
     // Post the comment to the thread
-    echo "Posting comment to topic '{$topic->name}'.\n";
     $guzzle->post('/api/v1/messages', [
         'query' => [
             'type' => 'stream',
