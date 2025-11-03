@@ -15,7 +15,7 @@ require_once __DIR__ . '/bootstrap.php';
 
 const STREAM_ID = 24;
 const DEADLINE_HOURS = 16;
-const BOT_COMMENT_MARKER = '⏰ Incident SLO:';
+const BOT_COMMENT_MARKER = 'Incident SLO:';
 
 // Get all topics in the stream
 $response = $guzzle->get("/api/v1/users/me/" . STREAM_ID . "/topics");
@@ -80,7 +80,7 @@ foreach ($topics as $topic) {
         "%s \n\n" .
         "This incident was started on %s.\n" .
         "The resolution deadline is **%s** (%d hours after incident start).",
-        BOT_COMMENT_MARKER,
+        '⏰ '. BOT_COMMENT_MARKER,
         $firstMessageDate->format('d-m-Y H:i:s T'),
         $deadlineDate->format('d-m-Y H:i:s T'),
         DEADLINE_HOURS
