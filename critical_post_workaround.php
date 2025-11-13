@@ -7,7 +7,7 @@
 require_once __DIR__ . '/bootstrap.php';
 
 const STREAM_ID = 24;
-const REMINDER_AFTER_MINUTES = 15;
+const REMINDER_AFTER_MINUTES = 120;
 const BOT_COMMENT_MARKER = 'At this point, your focus should be on applying workarounds to restore service';
 const TIMEZONE = new DateTimeZone('Europe/Amsterdam');
 $firstResponders = explode(',', $_ENV['FIRST_RESPONDERS']);
