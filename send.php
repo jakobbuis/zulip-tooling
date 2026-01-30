@@ -4,6 +4,7 @@ use Symfony\Component\Mailer\Transport;
 use Symfony\Component\Mailer\Mailer;
 use Symfony\Component\Mime\Address;
 use Symfony\Component\Mime\Email;
+use ZulipTooling\Kimai;
 
 /*
  * This file sends an email to a particular zulip topic.
@@ -39,6 +40,19 @@ $mailer = new Mailer($transport);
 $date = date('F j, Y');
 $text = file_get_contents($templateFile);
 $text = str_replace('$date', $date, $text);
+
+// Fetch Kimai time tracking summary if configured
+$kimaiSummary = '';
+if (!empty($_ENV['KIMAI_URL']) && !empty($_ENV['KIMAI_API_TOKEN'])) {
+    $userIds = !empty($_ENV['KIMAI_USER_IDS'])
+        ? array_map('intval', explode(',', $_ENV['KIMAI_USER_IDS']))
+        : [];
+    $kimai = new Kimai($_ENV['KIMAI_URL'], $_ENV['KIMAI_API_TOKEN'], $userIds);
+    $summary = $kimai->getLastWorkingDaySummary();
+    $highlightProject = $_ENV['KIMAI_HIGHLIGHT_PROJECT'] ?? null;
+    $kimaiSummary = $kimai->formatSummaryForTemplate($summary, $highlightProject ?: null);
+}
+$text = str_replace('$kimai_summary', $kimaiSummary, $text);
 
 // Add open topics to the message if today is Wednesday or flag is provided
 if (date('w') == 3 && $showOpenTopicsList) { // 3 = Wednesday

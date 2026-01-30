@@ -10,5 +10,10 @@
         "guzzlehttp/guzzle": "^7.9",
         "league/csv": "^9.0",
         "deployer/deployer": "^7.5"
+    },
+    "autoload": {
+        "psr-4": {
+            "ZulipTooling\\": "src/"
+        }
     }
 }

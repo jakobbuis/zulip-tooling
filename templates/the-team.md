@@ -1,5 +1,7 @@
 :wave: Good morning! Today is $date. It's time for daily standup:
 
+**Yesterday's time tracking:**
+$kimai_summary
 First, please answer the following questions in this Zulip thread:
 
 1. What did you accomplish yesterday?
