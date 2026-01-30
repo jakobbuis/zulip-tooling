@@ -11,6 +11,8 @@ set('keep_releases', 3);
 
 set('shared_files', ['.env']);
 
+set('ssh_multiplexing', false);
+
 host('jakobbuis.nl')
     ->set('hostname', 'jakobbuis.nl')
     ->set('remote_user', 'jakob')

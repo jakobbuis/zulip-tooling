@@ -17,3 +17,13 @@ services:
     ports:
       - "8025:8025"
       - "1025:1025"
+
+  deployer:
+    build:
+      context: .
+      dockerfile: Dockerfile.deployer
+    volumes:
+      - .:/usr/src/zulip-tooling
+      - ~/.ssh:/root/.ssh:ro
+    env_file:
+      - .env
