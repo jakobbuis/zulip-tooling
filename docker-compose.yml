@@ -1,0 +1,19 @@
+services:
+  app:
+    build: .
+    volumes:
+      - .:/usr/src/zulip-tooling
+    env_file:
+      - .env
+    environment:
+      - MAIL_DSN=smtp://mailpit:1025
+    depends_on:
+      - mailpit
+    stdin_open: true
+    tty: true
+
+  mailpit:
+    image: axllent/mailpit
+    ports:
+      - "8025:8025"
+      - "1025:1025"
