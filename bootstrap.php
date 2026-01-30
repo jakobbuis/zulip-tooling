@@ -14,6 +14,7 @@ $dotenv->required([
     'ZULIP_USERNAME',
     'ZULIP_API_KEY',
     'ZULIP_URL',
+    'FIRST_RESPONDERS',
 ]);
 
 $guzzle = new Client([
