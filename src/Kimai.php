@@ -23,7 +23,7 @@ class Kimai
 
     /**
      * Get time tracking summary for the last working day, grouped by user.
-     * Returns data in format: ['Aloïs' => ['project_hours' => ['RAMS' => 6.5], 'total' => 7.0], ...]
+     * Returns data in format: ['Aloïs' => ['project_hours' => ['project' => 6.5], 'total' => 7.0], ...]
      */
     public function getLastWorkingDaySummary(): array
     {
