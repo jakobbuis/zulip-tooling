@@ -6,7 +6,7 @@
  *
  * Output format: user_id, date (YYYY-MM-DD), hours [project] (1 decimal), total hours
  *
- * Usage: php kimai_weekly_report.php
+ * Usage: php kimai_project_share_report.php [start]
  */
 
 require_once __DIR__ . '/bootstrap.php';
