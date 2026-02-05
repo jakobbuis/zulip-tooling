@@ -35,20 +35,7 @@ $client = new Client([
 
 // Determine date range: 2025-09-01 to last Friday
 $start = new DateTimeImmutable('2025-09-01');
-$today = new DateTimeImmutable('today');
-$dayOfWeek = (int) $today->format('N');
-
-// Find last Friday
-$lastFriday = match (true) {
-    $dayOfWeek >= 5 => $today->modify('last friday'),
-    default => $today->modify('last friday'),
-};
-// If today IS Friday, we want this Friday
-if ($dayOfWeek === 5) {
-    $lastFriday = $today;
-}
-
-$end = $lastFriday;
+$end = new DateTimeImmutable('today');
 
 fprintf(STDERR, "Report period: %s to %s\n", $start->format('Y-m-d'), $end->format('Y-m-d'));
 
