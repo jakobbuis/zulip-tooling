@@ -16,7 +16,7 @@ $topic = $argv[3] ?? null;
 $since = $argv[4] ?? null;
 
 if ($email === null || $stream === null || $topic === null || $since === null) {
-    echo "Usage: php send.php <email> <stream> <topic> <since>\n";
+    echo "Usage: php email_thread.php <email> <stream> <topic> <since>\n";
     exit(1);
 }
 

@@ -8,7 +8,7 @@ use GuzzleHttp\Client;
 
 $stream = (string) $argv[1] ?? null;
 if ($stream === null) {
-    echo "Usage: php send.php <stream>\n";
+    echo "Usage: php close.php <stream>\n";
     exit(1);
 }
 
