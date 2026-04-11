@@ -32,7 +32,7 @@ $response = $guzzle->get('/api/v1/messages', [
 $data = $response->getBody()->getContents();
 $messages = json_decode($data)->messages;
 if (count($messages) === 0) {
-    echo 'No messages found for today\'s topic' . PHP_EOL;
+    $logger->warning('No messages found for today\'s topic');
     exit(1);
 }
 $id = $messages[0]->id;

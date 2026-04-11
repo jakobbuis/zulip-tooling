@@ -10,7 +10,7 @@ if (is_readable($path)) {
     $holidays = array_map(fn ($line) => $line['date'], iterator_to_array($csv->getRecords()));
 
     if (in_array(date('Y-m-d'), $holidays)) {
-        echo "Today is a national holiday. Skipping operation.\n";
+        $logger->info('Today is a national holiday. Skipping operation.');
         exit;
     }
 }

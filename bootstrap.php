@@ -2,8 +2,13 @@
 
 use Dotenv\Dotenv;
 use GuzzleHttp\Client;
+use Monolog\Handler\RotatingFileHandler;
+use Monolog\Logger;
 
 require_once __DIR__ . '/vendor/autoload.php';
+
+$logger = new Logger('zulip-tooling');
+$logger->pushHandler(new RotatingFileHandler(__DIR__ . '/log/zulip-tooling.log', 30));
 
 $dotenv = Dotenv::createMutable(__DIR__);
 $dotenv->load();

@@ -25,11 +25,12 @@ if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
 }
 
 require_once __DIR__ . '/bootstrap.php';
+$logger->info("Sending template '{$template}' to {$email}");
 require_once __DIR__ . '/skip_holidays.php';
 
 $templateFile = __DIR__ . "/templates/{$template}.md";
 if (!file_exists($templateFile)) {
-    echo "Template '{$template}' not found. Available templates: team-mad, the-team\n";
+    $logger->error("Template '{$template}' not found. Available templates: team-mad, the-team");
     exit(3);
 }
 
